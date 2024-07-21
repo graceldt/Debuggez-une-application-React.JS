@@ -4,10 +4,10 @@ import Home from "./index";
 describe("When Form is created", () => {
   it("a list of fields card is displayed", async () => {
     render(<Home />);
-    await screen.findByText("Email");
-    await screen.findByText("Nom");
-    await screen.findByText("Prénom");
-    await screen.findByText("Personel / Entreprise");
+    screen.findByText("Email");
+    screen.findByText("Nom");
+    screen.findByText("Prénom");
+    screen.findByText("Personel / Entreprise");
   });
 
   describe("and a click is triggered on the submit button", () => {
@@ -20,8 +20,8 @@ describe("When Form is created", () => {
           bubbles: true,
         })
       );
-      await screen.findByText("En cours");
-      await screen.findByText("Message envoyé !");
+      screen.findByText("En cours");
+      screen.findByText("Message envoyé !");
     });
   });
 
