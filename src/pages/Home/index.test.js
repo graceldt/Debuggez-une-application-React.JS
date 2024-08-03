@@ -14,7 +14,7 @@ describe("When Form is created", () => {
     it("the success message is displayed", async () => {
       render(<Home />);
       fireEvent(
-        await screen.findByText("Envoyer"),
+        screen.findByText("Envoyer"),
         new MouseEvent("click", {
           cancelable: true,
           bubbles: true,
