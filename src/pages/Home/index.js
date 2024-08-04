@@ -15,9 +15,10 @@ import { useData } from "../../contexts/DataContext";
 const Page = () => {
   const { data } = useData()
   if(!data) return 'loading...'
-
-  const eventNumber = data?.events.length
-  const last = data?.events[eventNumber - 1]
+  const eventDate = data?.events.sort((evtA, evtB) =>
+    new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
+  );
+  const last = eventDate[ eventDate.length -1]
 
   return <>
     <header>

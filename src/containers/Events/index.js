@@ -11,7 +11,7 @@ const PER_PAGE = 9;
 
 const EventList = () => {
   const { data, error } = useData();
-  const [events, setEvent] = useState(data?.events);
+  const [events, setEvent] = useState(data?.events || [] );
   const [currentPage, setCurrentPage] = useState(1);
 
   const filteredEvents = (events).filter((_, index) => {
