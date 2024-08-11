@@ -11,10 +11,14 @@ const PER_PAGE = 9;
 
 const EventList = () => {
   const { data, error } = useData();
-  const [events, setEvent] = useState(data?.events || [] );
+  const [type, setType] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const filteredEvents = (events).filter((_, index) => {
+  const filteredEvents = (
+    (!type
+      ? data?.events
+      : data?.events.filter(event => event.type === type)) || []  // Filtrer les événements en fonction du type sélectionné
+  ).filter((event, index) => {
     if (
       (currentPage - 1) * PER_PAGE <= index &&
       PER_PAGE * currentPage > index
@@ -24,29 +28,25 @@ const EventList = () => {
     return false;
   });
   
-
   const changeType = (evtType) => {
     setCurrentPage(1);
-    const ev = evtType ? data?.events.filter(event => event.type === evtType) : data?.events
-    setEvent(ev)
+    setType(evtType);
+    // console.log("Selected type:", evtType);
   };
-  
+  const pageNumber = Math.floor((filteredEvents?.length || 0) / PER_PAGE) + 1;
   const typeList = new Set(data?.events.map((event) => event.type));
   return (
     <>
-      {error && <div>An error occured</div>}
-      {data === null || data === undefined ? (
-        "loading"
-      ) : (
+      {error && <div>Ooops il y a eu une erreur !</div>}
+      {data && (
         <>
           <h3 className="SelectTitle">Catégories</h3>
           <Select
             selection={Array.from(typeList)}
-            onChange={(value) => {changeType(value)}}
+            onChange={(value) => (value ? changeType(value) : changeType(null))}
           />
           <div id="events" className="ListContainer">
-            
-            { filteredEvents.map((event) => (
+            {filteredEvents.map((event) => (
               <Modal key={event.id} Content={<ModalEvent event={event} />}>
                 {({ setIsOpened }) => (
                   <EventCard
@@ -61,9 +61,9 @@ const EventList = () => {
             ))}
           </div>
           <div className="Pagination">
-            {[...Array(Math.ceil(events.length / PER_PAGE) || 0)].map((_, n) => (
+            {[...Array(pageNumber || 0)].map((_, n) => (
               // eslint-disable-next-line react/no-array-index-key
-              <a key={n} href="#events" onClick={() => setCurrentPage(n + 1)} className={ currentPage === n+1 ? "active": "none" }>
+              <a key={n} href="#events" onClick={() => setCurrentPage(n + 1)}>
                 {n + 1}
               </a>
             ))}

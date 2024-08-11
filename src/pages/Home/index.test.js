@@ -1,27 +1,35 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import Home from "./index";
 
 describe("When Form is created", () => {
   it("a list of fields card is displayed", async () => {
     render(<Home />);
-    screen.findByText("Email");
-    screen.findByText("Nom");
-    screen.findByText("Prénom");
-    screen.findByText("Personel / Entreprise");
+    await screen.findByText("Email");
+    await screen.findByText("Nom");
+    await screen.findByText("Prénom");
+    await screen.findByText("Personel / Entreprise");
   });
 
   describe("and a click is triggered on the submit button", () => {
+    beforeEach(() => {
+      jest.useFakeTimers({})
+    })
+
+    afterEach(() => {
+      jest.useFakeTimers()
+    })
     it("the success message is displayed", async () => {
       render(<Home />);
       fireEvent(
-        screen.findByText("Envoyer"),
+        await screen.findByText("Envoyer"),
         new MouseEvent("click", {
           cancelable: true,
           bubbles: true,
         })
       );
-      screen.findByText("En cours");
-      screen.findByText("Message envoyé !");
+      await screen.findByText("En cours");
+      act(() => jest.advanceTimersByTime(5000))
+      await screen.findByText("Message envoyé !");
     });
   });
 
